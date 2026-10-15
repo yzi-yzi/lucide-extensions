@@ -1,0 +1,83 @@
+{
+  "name": "@yzi-yzi/lucide-extensions",
+  "version": "0.1.0",
+  "description": "Independent filled and duotone extensions for 1,890 Lucide icons, with SVG assets and React components.",
+  "type": "module",
+  "license": "ISC",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yzi-yzi/lucide-extensions.git"
+  },
+  "files": [
+    "dist",
+    "icons",
+    "metadata",
+    "LICENSE",
+    "NOTICE.md",
+    "README.md"
+  ],
+  "exports": {
+    "./react/filled": {
+      "types": "./dist/react/filled/index.d.ts",
+      "import": "./dist/react/filled/index.js",
+      "require": "./dist/react/filled/index.cjs"
+    },
+    "./react/duotone": {
+      "types": "./dist/react/duotone/index.d.ts",
+      "import": "./dist/react/duotone/index.js",
+      "require": "./dist/react/duotone/index.cjs"
+    },
+    "./react/filled/*": {
+      "types": "./dist/react/filled/*.d.ts",
+      "import": "./dist/react/filled/*.js",
+      "require": "./dist/react/filled/*.cjs"
+    },
+    "./react/duotone/*": {
+      "types": "./dist/react/duotone/*.d.ts",
+      "import": "./dist/react/duotone/*.js",
+      "require": "./dist/react/duotone/*.cjs"
+    },
+    "./core/filled/*": {
+      "types": "./dist/core/filled/*.d.ts",
+      "import": "./dist/core/filled/*.js",
+      "require": "./dist/core/filled/*.cjs"
+    },
+    "./core/duotone/*": {
+      "types": "./dist/core/duotone/*.d.ts",
+      "import": "./dist/core/duotone/*.js",
+      "require": "./dist/core/duotone/*.cjs"
+    },
+    "./filled/*": "./icons/filled/*",
+    "./duotone/*": "./icons/duotone/*",
+    "./metadata/*": "./metadata/*"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:web": "node scripts/build-web.mjs && vite build --config apps/web/vite.config.js",
+    "dev": "node scripts/build-web.mjs && vite --config apps/web/vite.config.js --host 127.0.0.1",
+    "test": "node --test scripts/library.test.mjs && tsc",
+    "check": "npm run build && npm test && npm run build:web",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@xmldom/xmldom": "0.9.12",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "^7.0.2",
+    "vite": "8.3.4"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

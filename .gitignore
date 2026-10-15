@@ -1,0 +1,9 @@
+node_modules/
+dist/
+apps/web/public/
+apps/web/dist/
+.vercel/
+.DS_Store
+*.tgz
+*.zip
+test-results/
