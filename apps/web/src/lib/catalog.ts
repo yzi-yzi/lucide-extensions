@@ -6,6 +6,7 @@ export type Icon = {
   aliases: (string | { name: string })[];
   deprecated?: boolean;
   search: string;
+  previewBatch: number;
 };
 export type Category = { id: string; title: string; count: number };
 export type Customization = { style: IconStyle; color: string; size: number; opacity: number; names: boolean };
@@ -50,8 +51,20 @@ export async function loadCatalog() {
   const titles = new Map(categories.map(category => [category.id, category.title]));
   return {
     categories,
-    icons: icons.sort((a, b) => a.name.localeCompare(b.name, 'en')).map(icon => ({ ...icon,
+    icons: icons.sort((a, b) => a.name.localeCompare(b.name, 'en')).map((icon, index) => ({ ...icon, previewBatch: Math.floor(index / 64),
       search: [icon.name, ...icon.tags, ...icon.categories.map(id => titles.get(id) || id), ...icon.aliases.map(alias => typeof alias === 'string' ? alias : alias.name)].join(' ').toLowerCase().replaceAll('-', ' '),
     })),
   };
+}
+
+const previewCache = new Map<string, Promise<Record<string, string>>>();
+export function fetchPreviews(style: IconStyle, batch: number | string) {
+  const key = `${style}-${batch}`;
+  if (!previewCache.has(key)) {
+    previewCache.set(key, fetch(`${base}previews/${key}.json`).then(response => {
+      if (!response.ok) throw new Error('Preview unavailable');
+      return response.json() as Promise<Record<string, string>>;
+    }).catch(error => { previewCache.delete(key); throw error; }));
+  }
+  return previewCache.get(key)!;
 }

@@ -41,7 +41,7 @@ function Sidebar({ settings, onSettings, categories, count, view, query, active,
           <Button variant={view === 'all' && !query ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => onView('all')}><LibraryIcon name="grid-2x2" />All icons<span className="ml-auto text-xs tabular-nums text-muted-foreground">{count.toLocaleString()}</span></Button>
           <Button variant={view === 'categories' && !query ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => onView('categories')}><LibraryIcon name="list" />Categories<span className="ml-auto text-xs tabular-nums text-muted-foreground">{categories.length}</span></Button>
         </div>
-        <nav aria-label="Icon categories" className="space-y-0.5">{categories.map(category => <Button key={category.id} variant="ghost" size="sm" asChild className={cn('w-full justify-between gap-2 text-xs font-normal', !query && view === 'categories' && active === category.id && 'bg-accent font-medium text-accent-foreground')}>
+        <nav aria-label="Icon categories" className="space-y-0.5">{categories.map(category => <Button key={category.id} variant="ghost" size="sm" asChild className={cn('w-full justify-between gap-2 text-xs font-normal', !query && view === 'categories' && active === category.id && 'bg-primary/10 font-medium text-foreground border-l-2 border-primary')}>
           <a href={`#${category.id}`} aria-current={!query && view === 'categories' && active === category.id ? 'location' : undefined} onClick={event => { event.preventDefault(); onCategory(category.id); }}><span className="truncate">{category.title}</span><span className="text-[11px] tabular-nums text-muted-foreground">{category.count}</span></a>
         </Button>)}</nav>
       </div>
@@ -96,7 +96,7 @@ export default function App() {
     }
     function keyboard(event: KeyboardEvent) {
       const target = event.target as HTMLElement;
-      if (document.querySelector('[role="dialog"][data-state="open"]')) return;
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
       if (((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') || (event.key === '/' && !target.matches('input, textarea, [contenteditable="true"]'))) {
         event.preventDefault(); search.current?.focus(); search.current?.select();
       }
@@ -117,9 +117,13 @@ export default function App() {
 
   useEffect(() => {
     if (!catalog || !pendingCategory || query || deferredQuery || view !== 'categories') return;
-    const element = document.getElementById(pendingCategory);
-    if (element) { element.scrollIntoView({ block: 'start' }); setActiveCategory(pendingCategory); }
-    setPendingCategory(null);
+    // Wait for measured virtual placeholders to commit their final row heights.
+    const frame = requestAnimationFrame(() => {
+      const element = document.getElementById(pendingCategory);
+      if (element) { element.scrollIntoView({ block: 'start' }); setActiveCategory(pendingCategory); }
+      setPendingCategory(null);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [catalog, pendingCategory, query, deferredQuery, view]);
 
   useEffect(() => {
@@ -137,9 +141,12 @@ export default function App() {
     return () => { cancelAnimationFrame(frame); window.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
   }, [groups, view, deferredQuery]);
 
-  const openIcon = useCallback((name: string, trigger: HTMLButtonElement) => { iconTrigger.current = trigger; setSelectedName(name); }, []);
+  const openIcon = useCallback((name: string, trigger: HTMLButtonElement, keyboard: boolean) => {
+    iconTrigger.current = trigger; setSelectedName(name);
+    if (keyboard) requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-detail-title]')?.focus({ preventScroll: true }));
+  }, []);
   function navigateCategory(id: string) {
-    setSelectedName(null); setQuery(''); setView('categories'); setMobileOpen(false); setPendingCategory(id);
+    setQuery(''); setView('categories'); setMobileOpen(false); setPendingCategory(id);
     const url = new URL(location.href); url.hash = id; history.replaceState(null, '', url);
   }
   function changeView(next: string) { setView(next); setQuery(''); setMobileOpen(false); window.scrollTo({ top: 0 }); }
@@ -166,7 +173,7 @@ export default function App() {
       </nav>
     </header>
     <aside aria-label="Customizer and categories" className="fixed top-16 bottom-0 left-0 hidden w-68 border-r md:block"><Sidebar {...sidebarProps} /></aside>
-    <main id="content" tabIndex={-1} className="min-h-svh min-w-0 pt-16 outline-none md:ml-68">
+    <main id="content" tabIndex={-1} className={cn("min-h-svh min-w-0 pt-16 outline-none md:ml-68", selected && "pb-[var(--details-height)]")}>
       <div id="search-area" className="sticky top-16 z-30 space-y-3 border-b bg-background/95 px-4 py-5 backdrop-blur-sm sm:px-6 lg:px-8">
         <div className="relative"><LibraryIcon name="search" className="pointer-events-none absolute top-3.5 left-3.5 size-4 text-muted-foreground" /><Input ref={search} id="search" type="search" aria-label="Search icons" placeholder="Search 1,890 icons…" value={query} onChange={event => setQuery(event.target.value)} autoComplete="off" className="h-11 bg-background pr-16 pl-10 text-sm shadow-xs" /><kbd className="pointer-events-none absolute top-3 right-3 hidden rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">⌘ K</kbd></div>
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"><p>Familiar icons. Two new dimensions.</p><p className="capitalize">{settings.style}<span className="mx-2 text-border">/</span>{(catalog?.icons.length || 1890).toLocaleString()} icons</p></div>
@@ -175,7 +182,7 @@ export default function App() {
         {error ? <div className="py-20 text-center"><h1 className="text-lg font-semibold">Unable to load the catalog</h1><p className="mt-2 text-sm text-muted-foreground">Check your connection and try again.</p><Button className="mt-5" onClick={() => setRetry(value => value + 1)}>Try again</Button></div>
           : !catalog ? <div className="space-y-4" role="status" aria-label="Loading icon catalog"><Skeleton className="h-6 w-36" /><div className="grid grid-cols-4 gap-2 sm:grid-cols-8">{Array.from({ length: 32 }, (_, index) => <Skeleton key={index} className="h-16" />)}</div></div>
           : groups[0]?.icons.length === 0 ? <div className="py-20 text-center"><LibraryIcon name="search" className="size-10 text-muted-foreground" /><h1 className="mt-4 text-lg font-semibold">No icons found</h1><p className="mt-2 text-sm text-muted-foreground">Try a different name, category, or keyword.</p><Button variant="outline" className="mt-5" onClick={() => { setQuery(''); search.current?.focus(); }}>Clear search</Button></div>
-          : groups.map(group => <GallerySection key={group.id} id={group.id} title={group.title} icons={group.icons} settings={settings} onOpen={openIcon} />)}
+          : groups.map(group => <GallerySection key={group.id} id={group.id} title={group.title} icons={group.icons} settings={settings} selectedName={selectedName} onOpen={openIcon} />)}
       </div>
       <footer className="mx-4 mt-6 space-y-4 border-t py-8 text-xs text-muted-foreground sm:mx-6 lg:mx-8"><div className="flex flex-wrap gap-x-5 gap-y-2"><button className="hover:text-foreground" onClick={() => setGuide('guide')}>Guide</button><button className="hover:text-foreground" onClick={() => setGuide('packages')}>Packages</button><a className="hover:text-foreground" href={`${base}LICENSE.txt`} target="_blank" rel="noreferrer">License</a><a className="hover:text-foreground" href={`${repo}/releases`}>Releases</a><a className="hover:text-foreground" href={`${repo}/issues`}>Feedback</a></div><p className="max-w-xl leading-relaxed">An independent extension of <a href="https://lucide.dev" className="underline underline-offset-4">Lucide</a>. Not affiliated with Lucide Icons. Released under ISC, with upstream Lucide and Feather notices preserved.</p></footer>
     </main>
