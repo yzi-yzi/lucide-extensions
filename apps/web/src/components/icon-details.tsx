@@ -41,31 +41,36 @@ export function IconDetails({ icon, settings, categories, onClose, onStyle, onCa
   }
   return <Sheet modal={false} open={!!icon} onOpenChange={open => { if (!open) onClose(); }}>
     <SheetContent id="icon-details" side="bottom" showOverlay={false} showCloseButton={false}
-      className="z-40 h-[var(--details-height)] gap-0 rounded-t-2xl border-t p-0 shadow-[0_-8px_32px_#00000010] data-[state=open]:duration-200 md:left-68"
+      className="inset-x-auto bottom-3 left-1/2 z-40 h-[var(--details-height)] w-[calc(100%-1.5rem)] max-w-[800px] -translate-x-1/2 gap-0 overflow-hidden rounded-2xl border p-0 shadow-xl data-[state=open]:duration-200 md:bottom-4 md:left-[calc(50%+8.5rem)] md:w-[calc(100%-19rem)]"
       onOpenAutoFocus={event => event.preventDefault()}
       onInteractOutside={event => event.preventDefault()}
       onCloseAutoFocus={event => { event.preventDefault(); if (trigger.current?.isConnected) trigger.current.focus({ preventScroll: true }); else document.querySelector<HTMLInputElement>('#search')?.focus({ preventScroll: true }); }}>
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3 sm:px-6">
-        <div className="min-w-0"><SheetTitle tabIndex={-1} data-detail-title className="truncate text-base outline-none">{icon?.name}</SheetTitle><SheetDescription className="mt-0.5 text-xs">Select another icon to compare. Keep browsing while this panel is open.</SheetDescription></div>
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b px-5 py-3">
+        <div className="min-w-0"><SheetTitle tabIndex={-1} data-detail-title className="truncate text-base outline-none">{icon?.name}</SheetTitle><SheetDescription className="mt-0.5 text-xs">24 × 24 grid · {settings.style === 'filled' ? 'Filled' : 'Duotone'}</SheetDescription></div>
         <Button variant="ghost" size="icon-sm" aria-label="Close icon details" onClick={onClose}><LibraryIcon name="x" /></Button>
       </div>
-      <div className="grid min-h-0 flex-1 gap-5 overflow-y-auto p-4 sm:p-5 md:grid-cols-[128px_minmax(0,1fr)] xl:grid-cols-[160px_minmax(220px,0.8fr)_minmax(0,1.4fr)]">
-        <div className="preview-grid relative flex h-28 items-center justify-center rounded-lg border md:h-full" aria-label="Icon preview">
-          {svg ? <div className="icon-preview" aria-hidden="true" dangerouslySetInnerHTML={{ __html: svg }} /> : <Skeleton className="size-16 rounded-lg" />}
-          <span className="absolute right-2 bottom-2 text-[10px] text-muted-foreground">{settings.size} × {settings.size}</span>
-        </div>
-        <div className="flex min-w-0 flex-col gap-3">
+      <div className="grid min-h-0 flex-1 content-start gap-5 overflow-y-auto p-5 sm:grid-cols-[144px_minmax(0,1fr)] lg:grid-cols-[160px_minmax(0,1fr)]">
+        <div className="mx-auto w-36 min-w-0 space-y-3 sm:w-full">
+          <div className="preview-grid relative flex aspect-square w-full items-center justify-center rounded-xl border" aria-label="Icon preview">
+            {svg ? <div className="icon-preview" aria-hidden="true" dangerouslySetInnerHTML={{ __html: svg }} /> : <Skeleton className="size-16 rounded-lg" />}
+            <span className="absolute right-2 bottom-2 text-[10px] text-muted-foreground">{settings.size} × {settings.size}</span>
+          </div>
           <StylePicker value={settings.style} onChange={onStyle} />
-          <div className="grid grid-cols-2 gap-2"><Button disabled={!svg} onClick={() => copyCode(svg)}><LibraryIcon name="copy" />Copy SVG</Button><Button variant="outline" disabled={!svg} onClick={download}><LibraryIcon name="download" />Download</Button></div>
-          {error && <div role="alert" className="text-xs text-destructive">{error} <button className="underline" onClick={() => setRetry(value => value + 1)}>Try again</button></div>}
-          <div className="flex flex-wrap gap-1.5">{icon?.categories.map(id => <Badge key={id} variant="outline" asChild><button onClick={() => onCategory(id)}>{categories.find(category => category.id === id)?.title || id}</button></Badge>)}</div>
-          <Button variant="link" size="sm" className="mt-auto h-auto justify-start self-start p-0 text-xs" onClick={onGuide}>Installation guide<LibraryIcon name="arrow-up-right" /></Button>
         </div>
-        <Tabs value={codeTab} onValueChange={setCodeTab} className="min-w-0 gap-2 md:col-span-2 xl:col-span-1">
-          <div className="flex items-center justify-between"><TabsList aria-label="Code format"><TabsTrigger value="react">React</TabsTrigger><TabsTrigger value="svg">SVG</TabsTrigger></TabsList><Button size="sm" variant="ghost" disabled={codeTab === 'svg' && !svg} onClick={() => copyCode(codeTab === 'react' ? react : svg)}><LibraryIcon name="copy" />Copy code</Button></div>
-          <TabsContent value="react" className="min-h-0"><pre tabIndex={0} className="h-36 overflow-auto rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed md:h-full"><code>{react}</code></pre></TabsContent>
-          <TabsContent value="svg" className="min-h-0"><pre tabIndex={0} className="h-36 overflow-auto rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed md:h-full"><code>{svg || 'Loading SVG…'}</code></pre></TabsContent>
-        </Tabs>
+        <div className="min-w-0 space-y-3">
+          <Tabs value={codeTab} onValueChange={setCodeTab} className="min-w-0 gap-2">
+            <div className="flex items-center justify-between gap-2"><TabsList aria-label="Code format"><TabsTrigger value="react">React</TabsTrigger><TabsTrigger value="svg">SVG</TabsTrigger></TabsList><Button size="sm" variant="ghost" disabled={codeTab === 'svg' && !svg} onClick={() => copyCode(codeTab === 'react' ? react : svg)}><LibraryIcon name="copy" />Copy code</Button></div>
+            <TabsContent value="react" className="min-w-0"><pre tabIndex={0} aria-label="React code" className="h-36 overflow-y-auto whitespace-pre-wrap rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed [overflow-wrap:anywhere]"><code>{react}</code></pre></TabsContent>
+            <TabsContent value="svg" className="min-w-0"><pre tabIndex={0} aria-label="SVG code" className="h-36 overflow-y-auto whitespace-pre-wrap rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed [overflow-wrap:anywhere]"><code>{svg || 'Loading SVG…'}</code></pre></TabsContent>
+          </Tabs>
+          <div className="flex flex-wrap items-center gap-1.5" aria-label="Icon categories"><span className="mr-1 text-xs text-muted-foreground">Categories</span>{icon?.categories.map(id => <Badge key={id} variant="secondary" asChild><button onClick={() => onCategory(id)}>{categories.find(category => category.id === id)?.title || id}</button></Badge>)}</div>
+          {error && <div role="alert" className="text-xs text-destructive">{error} <button className="underline" onClick={() => setRetry(value => value + 1)}>Try again</button></div>}
+        </div>
+      </div>
+      <div className="grid shrink-0 grid-cols-2 items-center gap-2 border-t bg-muted/20 px-4 py-3 sm:flex sm:justify-end sm:px-5">
+        <Button variant="ghost" size="sm" className="col-span-2 justify-self-start sm:mr-auto" onClick={onGuide}>How to use<LibraryIcon name="arrow-up-right" /></Button>
+        <Button size="sm" variant="outline" disabled={!svg} onClick={download}><LibraryIcon name="download" />Download SVG</Button>
+        <Button size="sm" disabled={!svg} onClick={() => copyCode(svg)}><LibraryIcon name="copy" />Copy SVG</Button>
       </div>
     </SheetContent>
   </Sheet>;

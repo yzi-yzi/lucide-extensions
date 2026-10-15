@@ -109,6 +109,6 @@
 .preview-grid { background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 16px 16px; }
 .icon-preview svg { width: 88px; height: 88px; }
 
-:root { --details-height: min(52svh, 420px); }
-@media (min-width: 768px) { :root { --details-height: 316px; } }
+:root { --details-height: min(56svh, 460px); }
+@media (min-width: 768px) { :root { --details-height: min(392px, 65svh); } }
 .gallery-glyph [opacity] { opacity: var(--secondary-opacity); }
