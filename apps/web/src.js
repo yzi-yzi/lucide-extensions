@@ -3,13 +3,14 @@ import './style.css';
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const base = import.meta.env.BASE_URL;
 const repo = 'https://github.com/yzi-yzi/lucide-extensions';
 const install = `npm install ${repo}/releases/download/v0.1.0/yzi-yzi-lucide-extensions-0.1.0.tgz`;
 const params = new URLSearchParams(location.search);
 const state = { style: params.get('style') === 'duotone' ? 'duotone' : 'filled', view: params.get('view') === 'all' ? 'all' : 'categories', color: '', size: 24, opacity: 22, query: params.get('q') || '', selected: null, code: 'react' };
 let icons = [], categories = [], observer, activeObserver, toastTimer, detailRequest = 0;
 const svgCache = new Map();
-const iconUrl = name => `/icons/${state.style}/${name}.svg`;
+const iconUrl = name => `${base}icons/${state.style}/${name}.svg`;
 const pascal = name => name.split('-').map(p => p[0].toUpperCase() + p.slice(1)).join('');
 function toast(message) { $('#toast').textContent = message; $('#toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('#toast').classList.remove('visible'), 2400); }
 function syncUrl() {
@@ -56,6 +57,10 @@ $$('[data-style], [data-detail-style]').forEach(button => button.addEventListene
 $('#size').addEventListener('input', e => { state.size = Number(e.target.value); applyStyle(); });
 $('#opacity').addEventListener('input', e => { state.opacity = Number(e.target.value); applyStyle(); });
 $('#color').addEventListener('input', e => { state.color = e.target.value; $('#color-text').value = state.color; applyStyle(); });
+$('#color-text').addEventListener('input', e => {
+  const value = e.target.value.trim();
+  if (/^#[\da-f]{6}$/i.test(value)) { state.color = value; $('#color').value = value; applyStyle(); }
+});
 $('#color-text').addEventListener('change', e => {
   const value = e.target.value.trim();
   if (/^#[\da-f]{6}$/i.test(value)) { state.color = value; $('#color').value = value; }
@@ -110,7 +115,7 @@ function renderGallery() {
 $('#gallery').addEventListener('click', e => { const card = e.target.closest('[data-name]'); if (card) openIcon(card.dataset.name); });
 async function fetchSvg(name, style = state.style) {
   const key = `${style}/${name}`;
-  if (!svgCache.has(key)) svgCache.set(key, fetch(`/icons/${key}.svg`).then(response => { if (!response.ok) throw new Error('SVG unavailable'); return response.text(); }).catch(error => { svgCache.delete(key); throw error; }));
+  if (!svgCache.has(key)) svgCache.set(key, fetch(`${base}icons/${key}.svg`).then(response => { if (!response.ok) throw new Error('SVG unavailable'); return response.text(); }).catch(error => { svgCache.delete(key); throw error; }));
   return svgCache.get(key);
 }
 async function customSvg() {
@@ -161,7 +166,7 @@ function showDocs(page) {
 $$('[data-doc]').forEach(button => button.addEventListener('click', () => showDocs(button.dataset.doc)));
 async function init() {
   try {
-    [icons, categories] = await Promise.all(['/catalog.json', '/categories.json'].map(url => fetch(url).then(response => { if (!response.ok) throw new Error('Catalog unavailable'); return response.json(); })));
+    [icons, categories] = await Promise.all([`${base}catalog.json`, `${base}categories.json`].map(url => fetch(url).then(response => { if (!response.ok) throw new Error('Catalog unavailable'); return response.json(); })));
     icons.sort((a, b) => a.name.localeCompare(b.name, 'en'));
     icons.forEach(icon => icon.search = [icon.name, ...icon.tags, ...icon.categories.map(id => categories.find(c => c.id === id)?.title || id), ...icon.aliases.map(a => typeof a === 'string' ? a : a.name || '')].join(' ').toLowerCase().replaceAll('-', ' '));
     $('#categories').innerHTML = categories.map(c => `<a href="#${c.id}" data-category="${c.id}"><span>${escape(c.title)}</span><span class="count">${c.count}</span></a>`).join('');

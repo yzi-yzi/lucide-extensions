@@ -58,7 +58,8 @@
     "dev": "node scripts/build-web.mjs && vite --config apps/web/vite.config.js --host 127.0.0.1",
     "test": "node --test scripts/library.test.mjs && tsc",
     "check": "npm run build && npm test && npm run build:web",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "build:pages": "node scripts/build-web.mjs && vite build --config apps/web/vite.config.js --base=/lucide-extensions/"
   },
   "peerDependencies": {
     "react": ">=18"
