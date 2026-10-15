@@ -4,7 +4,7 @@
 
 An independent extension of [Lucide](https://lucide.dev), with 3,780 SVG assets, 42 categories, and tree-shakable React components. Designed on a 24 × 24 grid with `currentColor` and transparent cutouts. Duotone defaults to 22% secondary opacity.
 
-[Browse icons](https://yzi-yzi.github.io/lucide-extensions/) · [Download v0.1.0](https://github.com/yzi-yzi/lucide-extensions/releases/tag/v0.1.0) · [Paper design](https://app.paper.design/file/01M4X7ABDPS9FKKG3FTC271A46) · [Architecture decision](docs/architecture.md)
+[Browse icons](https://lucide-extensions.vercel.app/) · [Download v0.1.0](https://github.com/yzi-yzi/lucide-extensions/releases/tag/v0.1.0) · [Paper design](https://app.paper.design/file/01M4X7ABDPS9FKKG3FTC271A46) · [Architecture decision](docs/architecture.md)
 
 ## Install
 
@@ -72,7 +72,7 @@ npm pack       # Build an installable package
 
 A GitHub Actions template is included at `docs/ci-workflow.yml`. Move it to `.github/workflows/ci.yml` using a GitHub connection with workflow permission to enable CI. The current release was validated locally.
 
-The live gallery is hosted with GitHub Pages from the `gh-pages` branch. Run `npm run build:pages` to generate its assets. Vercel project creation was denied by the connected account, so no Vercel project was created.
+The live gallery is hosted on [Vercel](https://lucide-extensions.vercel.app/). The connected GitHub repository automatically deploys changes to `main`. A [GitHub Pages mirror](https://yzi-yzi.github.io/lucide-extensions/) is served from the `gh-pages` branch; run `npm run build:pages` to generate its assets.
 
 For Vercel, use the repository root, `npm run build:web`, and output `apps/web/dist`. The gallery is static and needs no database or environment secrets.
 

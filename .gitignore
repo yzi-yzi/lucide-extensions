@@ -7,3 +7,4 @@ apps/web/dist/
 *.tgz
 *.zip
 test-results/
+.env*
