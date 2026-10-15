@@ -4,6 +4,7 @@ await mkdir('apps/web/public', { recursive: true });
 await cp('icons', 'apps/web/public/icons', { recursive: true });
 await cp('LICENSE', 'apps/web/public/LICENSE.txt');
 await cp('apps/web/favicon.svg', 'apps/web/public/favicon.svg');
+await cp('apps/web/OCTICONS-LICENSE.md', 'apps/web/public/OCTICONS-LICENSE.txt');
 const fontLicenses = await Promise.all(['geist', 'geist-mono'].map(font => readFile(`node_modules/@fontsource-variable/${font}/LICENSE`, 'utf8')));
 await writeFile('apps/web/public/FONT-LICENSES.txt', fontLicenses.join('\n\n'));
 await writeFile('apps/web/public/catalog.json', JSON.stringify(metadata.map(({ sha256, ...icon }) => icon)));

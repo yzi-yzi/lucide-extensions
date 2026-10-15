@@ -12,6 +12,7 @@ import { Customizer } from '@/components/customizer';
 import { GallerySection } from '@/components/gallery';
 import { IconDetails } from '@/components/icon-details';
 import { Guide } from '@/components/guide';
+import { GitHubIcon } from '@/components/github-icon';
 import { IconStyleContext, LibraryIcon } from '@/components/library-icon';
 import { base, defaults, loadCatalog, paper, repo, type Category, type Customization, type Icon } from '@/lib/catalog';
 import { cn } from '@/lib/utils';
@@ -168,7 +169,7 @@ export default function App() {
         <Button variant="ghost" size="sm" className="hidden lg:inline-flex" asChild><a href={paper} target="_blank" rel="noreferrer">Paper<LibraryIcon name="arrow-up-right" /></a></Button>
         <Separator orientation="vertical" className="mx-1 hidden h-5! sm:block" />
         <Tooltip><TooltipTrigger asChild><Button id="theme" variant="ghost" size="icon-sm" aria-label={themeLabel} onClick={() => setTheme(current => current === 'dark' ? 'light' : 'dark')}><LibraryIcon name={theme === 'dark' ? 'moon' : 'sun'} className="size-[18px]" /></Button></TooltipTrigger><TooltipContent>{themeLabel}</TooltipContent></Tooltip>
-        <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="icon-sm" asChild className="hidden sm:inline-flex"><a href={repo} target="_blank" rel="noreferrer" aria-label="GitHub repository"><LibraryIcon name="code-xml" className="size-[18px]" /></a></Button></TooltipTrigger><TooltipContent>View on GitHub</TooltipContent></Tooltip>
+        <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="icon-sm" asChild className="hidden sm:inline-flex"><a href={repo} target="_blank" rel="noreferrer" aria-label="GitHub repository"><GitHubIcon className="size-[18px]" /></a></Button></TooltipTrigger><TooltipContent>View on GitHub</TooltipContent></Tooltip>
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}><SheetTrigger asChild><Button ref={menuTrigger} variant="outline" size="icon-sm" className="md:hidden" aria-label="Open customizer and categories"><LibraryIcon name="sliders-horizontal" /></Button></SheetTrigger><SheetContent side="left" className="w-80 gap-0 p-0" onCloseAutoFocus={event => { event.preventDefault(); menuTrigger.current?.focus({ preventScroll: true }); }}><SheetHeader className="border-b px-5 py-4 text-left"><SheetTitle>Customize & browse</SheetTitle><SheetDescription>Choose a style and explore the catalog.</SheetDescription></SheetHeader><div className="min-h-0 flex-1"><Sidebar {...sidebarProps} /></div></SheetContent></Sheet>
       </nav>
     </header>
