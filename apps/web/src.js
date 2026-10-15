@@ -1,4 +1,10 @@
 import './style.css';
+import filledSun from '../../icons/filled/sun.svg?raw';
+import filledMoon from '../../icons/filled/moon.svg?raw';
+import duotoneSun from '../../icons/duotone/sun.svg?raw';
+import duotoneMoon from '../../icons/duotone/moon.svg?raw';
+
+const themeIcons = { filled: { sun: filledSun, moon: filledMoon }, duotone: { sun: duotoneSun, moon: duotoneMoon } };
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -18,9 +24,13 @@ function syncUrl() {
   for (const [key, value] of Object.entries({ style: state.style === 'filled' ? '' : state.style, view: state.view === 'categories' ? '' : state.view, q: state.query, icon: state.selected?.name || '' })) value ? url.searchParams.set(key, value) : url.searchParams.delete(key);
   history.replaceState(null, '', url);
 }
+function renderThemeIcon() {
+  const name = document.documentElement.dataset.theme === 'dark' ? 'moon' : 'sun';
+  $('#theme').innerHTML = themeIcons[state.style][name].replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+}
 function setTheme(dark) {
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  $('#theme').textContent = dark ? '☾' : '☼';
+  renderThemeIcon();
   $('#theme').setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
   try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
 }
@@ -29,6 +39,7 @@ setTheme(theme ? theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').m
 $('#theme').addEventListener('click', () => setTheme(document.documentElement.dataset.theme !== 'dark'));
 
 function applyStyle() {
+  renderThemeIcon();
   document.documentElement.style.setProperty('--icon-size', `${state.size}px`);
   document.documentElement.style.setProperty('--icon-color', state.color || 'var(--ink)');
   $('[data-style="filled"]').setAttribute('aria-pressed', state.style === 'filled');
