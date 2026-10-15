@@ -50,18 +50,18 @@ export function IconDetails({ icon, settings, categories, onClose, onStyle, onCa
         <Button variant="ghost" size="icon-sm" aria-label="Close icon details" onClick={onClose}><LibraryIcon name="x" /></Button>
       </div>
       <div className="grid min-h-0 flex-1 content-start gap-5 overflow-y-auto p-5 sm:grid-cols-[144px_minmax(0,1fr)] lg:grid-cols-[160px_minmax(0,1fr)]">
-        <div className="mx-auto w-36 min-w-0 space-y-3 sm:w-full">
+        <div className="mx-auto w-36 min-w-0 space-y-2 sm:w-full">
+          <StylePicker value={settings.style} onChange={onStyle} />
           <div className="preview-grid relative flex aspect-square w-full items-center justify-center rounded-xl border" aria-label="Icon preview">
             {svg ? <div className="icon-preview" aria-hidden="true" dangerouslySetInnerHTML={{ __html: svg }} /> : <Skeleton className="size-16 rounded-lg" />}
             <span className="absolute right-2 bottom-2 text-[10px] text-muted-foreground">{settings.size} × {settings.size}</span>
           </div>
-          <StylePicker value={settings.style} onChange={onStyle} />
         </div>
         <div className="min-w-0 space-y-3">
           <Tabs value={codeTab} onValueChange={setCodeTab} className="min-w-0 gap-2">
             <div className="flex items-center justify-between gap-2"><TabsList aria-label="Code format"><TabsTrigger value="react">React</TabsTrigger><TabsTrigger value="svg">SVG</TabsTrigger></TabsList><Button size="sm" variant="ghost" disabled={codeTab === 'svg' && !svg} onClick={() => copyCode(codeTab === 'react' ? react : svg)}><LibraryIcon name="copy" />Copy code</Button></div>
-            <TabsContent value="react" className="min-w-0"><pre tabIndex={0} aria-label="React code" className="h-36 overflow-y-auto whitespace-pre-wrap rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed [overflow-wrap:anywhere]"><code>{react}</code></pre></TabsContent>
-            <TabsContent value="svg" className="min-w-0"><pre tabIndex={0} aria-label="SVG code" className="h-36 overflow-y-auto whitespace-pre-wrap rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed [overflow-wrap:anywhere]"><code>{svg || 'Loading SVG…'}</code></pre></TabsContent>
+            <TabsContent value="react" className="min-w-0"><pre tabIndex={0} aria-label="React code" className="h-36 lg:h-40 overflow-y-auto whitespace-pre-wrap rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed [overflow-wrap:anywhere]"><code>{react}</code></pre></TabsContent>
+            <TabsContent value="svg" className="min-w-0"><pre tabIndex={0} aria-label="SVG code" className="h-36 lg:h-40 overflow-y-auto whitespace-pre-wrap rounded-lg border bg-muted/50 p-3 font-mono text-xs leading-relaxed [overflow-wrap:anywhere]"><code>{svg || 'Loading SVG…'}</code></pre></TabsContent>
           </Tabs>
           <div className="flex flex-wrap items-center gap-1.5" aria-label="Icon categories"><span className="mr-1 text-xs text-muted-foreground">Categories</span>{icon?.categories.map(id => <Badge key={id} variant="secondary" asChild><button onClick={() => onCategory(id)}>{categories.find(category => category.id === id)?.title || id}</button></Badge>)}</div>
           {error && <div role="alert" className="text-xs text-destructive">{error} <button className="underline" onClick={() => setRetry(value => value + 1)}>Try again</button></div>}

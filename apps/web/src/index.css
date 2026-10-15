@@ -110,5 +110,5 @@
 .icon-preview svg { width: 88px; height: 88px; }
 
 :root { --details-height: min(56svh, 460px); }
-@media (min-width: 768px) { :root { --details-height: min(392px, 65svh); } }
+@media (min-width: 768px) { :root { --details-height: min(408px, 65svh); } }
 .gallery-glyph [opacity] { opacity: var(--secondary-opacity); }
