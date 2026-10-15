@@ -1,5 +1,7 @@
 # Lucide Extensions
 
+![Lucide Extensions — Filled and Duotone icons](apps/web/social/lucide-extensions-cover.png)
+
 **1,890 icons. Filled and duotone. One consistent library.**
 
 An independent extension of [Lucide](https://lucide.dev), with 3,780 SVG assets, 42 categories, and tree-shakable React components. Designed on a 24 × 24 grid with `currentColor` and transparent cutouts. Duotone defaults to 22% secondary opacity.

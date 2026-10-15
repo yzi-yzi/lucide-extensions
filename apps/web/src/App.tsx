@@ -175,6 +175,7 @@ export default function App() {
     </header>
     <aside aria-label="Customizer and categories" className="fixed top-16 bottom-0 left-0 hidden w-68 border-r md:block"><Sidebar {...sidebarProps} /></aside>
     <main id="content" tabIndex={-1} className={cn("min-h-svh min-w-0 pt-16 outline-none md:ml-68", selected && "pb-[calc(var(--details-height)+2rem)]")}>
+      <h1 className="sr-only">Lucide Extensions — Filled &amp; Duotone Icons</h1>
       <div id="search-area" className="sticky top-16 z-30 space-y-3 border-b bg-background/95 px-4 py-5 backdrop-blur-sm sm:px-6 lg:px-8">
         <div className="relative"><LibraryIcon name="search" className="pointer-events-none absolute top-3.5 left-3.5 size-4 text-muted-foreground" /><Input ref={search} id="search" type="search" aria-label="Search icons" placeholder="Search 1,890 icons…" value={query} onChange={event => setQuery(event.target.value)} autoComplete="off" className="h-11 bg-background pr-16 pl-10 text-sm shadow-xs" /><kbd className="pointer-events-none absolute top-3 right-3 hidden rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">⌘ K</kbd></div>
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"><p>Familiar icons. Two new dimensions.</p><p className="capitalize">{settings.style}<span className="mx-2 text-border">/</span>{(catalog?.icons.length || 1890).toLocaleString()} icons</p></div>
