@@ -106,9 +106,10 @@ function renderGallery() {
   $('#clear-search')?.addEventListener('click', () => { state.query = ''; $('#search').value = ''; renderGallery(); syncUrl(); $('#search').focus(); });
   observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('loaded'); entry.target.querySelectorAll('.glyph').forEach(setGlyph); observer.unobserve(entry.target); } }), { rootMargin: '600px' });
   $$('.icon-section').forEach(section => observer.observe(section));
-  activeObserver = new IntersectionObserver(entries => {
-    const visible = entries.find(entry => entry.isIntersecting);
-    if (visible) $$('#categories a').forEach(a => a.classList.toggle('active', a.dataset.category === visible.target.id));
+  activeObserver = new IntersectionObserver(() => {
+    const line = $('.search-area').getBoundingClientRect().bottom + 20;
+    const visible = $$('.icon-section').find(section => section.getBoundingClientRect().bottom > line);
+    if (visible) $$('#categories a').forEach(a => a.classList.toggle('active', a.dataset.category === visible.id));
   }, { rootMargin: '-170px 0px -65% 0px' });
   $$('.icon-section').forEach(section => activeObserver.observe(section));
 }
