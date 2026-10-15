@@ -54,7 +54,7 @@ metadata/                Names, tags, aliases, categories, source checksums
 packages/react/          Shared React component factory and types
 packages/core/           Framework-neutral package documentation
 scripts/                 Deterministic builds and catalog/package tests
-apps/web/                Vite gallery, generated from the same source
+apps/web/                React + shadcn/ui + Tailwind CSS gallery
 docs/                    Architecture and release process
 dist/                    Generated ESM, CommonJS, and declarations (not tracked)
 ```
@@ -69,6 +69,8 @@ npm run check   # Build library, verify catalog/components/tree shaking, build s
 npm run dev     # http://127.0.0.1:4173
 npm pack       # Build an installable package
 ```
+
+The website uses React, TypeScript, Tailwind CSS v4, and the shadcn/ui New York components. See [the web UI guide](apps/web/README.md) for component conventions and theming.
 
 A GitHub Actions template is included at `docs/ci-workflow.yml`. Move it to `.github/workflows/ci.yml` using a GitHub connection with workflow permission to enable CI. The current release was validated locally.
 
