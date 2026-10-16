@@ -13,7 +13,7 @@ export type Customization = { style: IconStyle; color: string; size: number; opa
 export const base = import.meta.env.BASE_URL;
 export const repo = 'https://github.com/yzi-yzi/lucide-extensions';
 export const paper = 'https://app.paper.design/file/01M4X7ABDPS9FKKG3FTC271A46';
-export const install = `npm install ${repo}/releases/download/v0.1.0/yzi-yzi-lucide-extensions-0.1.0.tgz`;
+export const install = 'npm install @yzi-yzi/lucide-extensions';
 export const defaults: Customization = { style: 'filled', color: '', size: 24, opacity: 22, names: false };
 export const iconUrl = (name: string, style: IconStyle) => `${base}icons/${style}/${name}.svg`;
 export const pascal = (name: string) => name.split('-').map(part => part[0].toUpperCase() + part.slice(1)).join('');

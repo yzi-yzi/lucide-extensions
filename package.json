@@ -92,5 +92,23 @@
   },
   "engines": {
     "node": ">=22.12"
+  },
+  "homepage": "https://lucide-extensions.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/yzi-yzi/lucide-extensions/issues"
+  },
+  "keywords": [
+    "icons",
+    "lucide",
+    "filled",
+    "duotone",
+    "svg",
+    "react",
+    "typescript",
+    "tree-shaking"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

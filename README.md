@@ -1,6 +1,6 @@
 # Lucide Extensions
 
-![Lucide Extensions — Filled and Duotone icons](apps/web/social/lucide-extensions-cover.png)
+![Lucide Extensions — Filled and Duotone icons](https://lucide-extensions.vercel.app/social/lucide-extensions-cover.png)
 
 **1,890 icons. Filled and duotone. One consistent library.**
 
@@ -10,10 +10,10 @@ An independent extension of [Lucide](https://lucide.dev), with 3,780 SVG assets,
 
 ## Install
 
-Install the built package from GitHub Releases (no npm registry publication is required):
+Install from npm:
 
 ```sh
-npm install https://github.com/yzi-yzi/lucide-extensions/releases/download/v0.1.0/yzi-yzi-lucide-extensions-0.1.0.tgz
+npm install @yzi-yzi/lucide-extensions
 ```
 
 React is an optional peer dependency. React 18+ is required only when using the React entry points.
